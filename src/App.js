@@ -15,25 +15,33 @@ export default function App() {
   const [repositories, setRepositories] = useState([]);
 
   useEffect(() => {
+    getRepositories()
+  }, [])
+
+  async function getRepositories(){
     api.get('/repositories').then(response => {
+      console.log(response.data)
       setRepositories(response.data)
     })
-  }, [])
+  }
+
   async function handleLikeRepository(id) {
-    api.post(`/repositories/${id}/likes`).then(response => {
-      console.log(response.data);
+    api.post(`/repositories/${id}/like`).then(response => {
+      getRepositories()
+    }).catch(err => {
+      console.log(err)
     })
   }
 
   return (
     <>
-      <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
+      <StatusBar barStyle="light-content" backgroundColor="#715cc1" />
       <SafeAreaView style={styles.container}>
       {repositories.map((repository, key) => (
-        <View style={styles.repositoryContainer}>
+        <View key={key} style={styles.repositoryContainer}>
           <Text style={styles.repository}>{repository.title}</Text> 
           <View style={styles.techsContainer}>
-            {repository.map((tech, key) => (
+            {repository.techs.map((tech, key) => (
               <Text key={key} style={styles.tech}>
                 {tech}
               </Text>
@@ -45,7 +53,7 @@ export default function App() {
               // Remember to replace "1" below with repository ID: {`repository-likes-${repository.id}`}
               testID={`repository-likes-${repository.id}`}
             >
-              {likes}
+              {`${repository.likes} curtida`}
             </Text>
           </View>
 
