@@ -27,7 +27,16 @@ export default function App() {
 
   async function handleLikeRepository(id) {
     api.post(`/repositories/${id}/like`).then(response => {
-      getRepositories()
+      const likesRepositories = response.data;
+      const updateRopositoriers = repositories.map(repository => {
+        if(repository.id === id){
+          return likesRepositories;
+        }else {
+          return repository
+        }
+      })
+
+      setRepositories(updateRopositoriers);
     }).catch(err => {
       console.log(err)
     })
@@ -53,7 +62,7 @@ export default function App() {
               // Remember to replace "1" below with repository ID: {`repository-likes-${repository.id}`}
               testID={`repository-likes-${repository.id}`}
             >
-              {`${repository.likes} curtida`}
+              {repository.likes} curtidas
             </Text>
           </View>
 
